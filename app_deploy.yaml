@@ -1,0 +1,13 @@
+- name: Deploy Netflix App using Helm
+  hosts: my_servers
+  tasks:
+    - name: Ensure Helm is installed
+      command: helm version
+      register: helm_version
+      changed_when: false  # This prevents Ansible from marking the task as "changed"
+    
+    - name: Deploy Helm chart for Netflix app
+      command:
+        cmd: helm install my-netflix-app ./
+        chdir: /home/ec2-user/NetFlix-Clone  # Update the path if necessary
+
