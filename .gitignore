@@ -8,3 +8,5 @@ crash.log
 *.key
 .terraform.lock.hcl
 .terraform.tfstate
+aws_credentials.yml
+
