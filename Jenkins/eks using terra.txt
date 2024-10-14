@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1' // Change to your desired region
+        GITHUB_REPO = 'https://github.com/Dev-OpsStream/NetFlix-Clone.git'
+        AWS_ACCESS_KEY_ID = credentials('xxxxxxxxxxxxxxx') // Replace with your Jenkins credential ID
+        AWS_SECRET_ACCESS_KEY = credentials('xxxxxxxxxxxxxxx') // Use the same if both keys are stored together
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: "${GITHUB_REPO}", branch: 'main' // Change branch if needed
+            }
+        }
+        stage('Terraform Actions') {
+            steps {
+                script {
+                    // Initialize, Plan, and Apply Terraform
+                    sh '''
+                        terraform init
+                        terraform plan -out=tfplan
+                        terraform apply -auto-approve tfplan
+                        terraform destroy  -auto-approve
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment was successful!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
